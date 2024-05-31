@@ -1,8 +1,9 @@
 selenium
 webdriver-manager
-pytest-html == 4.0
+pytest-html
 pytest-html-reporter
 pytest-xdist
 openpyxl
 allure-pytest
 pytest
+pytest-hot-reloading
