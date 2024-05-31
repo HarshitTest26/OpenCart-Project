@@ -2,3 +2,5 @@ reports/
 archive/
 .pytest_cache/
 .idea/
+output.json
+pytest_html_report.html
