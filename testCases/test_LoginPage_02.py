@@ -34,7 +34,7 @@ class Test_login():
         self.logger.info("*** ASSERTION STARTED ***")
         if self.cnf == "My Account":
             assert True
-            self.logger.info("*** ACCOUNT --> REGISTER --> PASSED***")
+            self.logger.info("*** ACCOUNT --> LOGIN --> PASSED***")
             self.driver.close()
         else:
             self.driver.save_screenshot(os.path.abspath(os.curdir + "\\screenshots\\Login_Page.png"))
