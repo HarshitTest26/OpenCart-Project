@@ -1,2 +1,4 @@
 reports/
 archive/
+.pytest_cache/
+.idea/
