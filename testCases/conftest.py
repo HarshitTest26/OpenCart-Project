@@ -38,8 +38,8 @@ def setup(browser):
 def pytest_addoption(parser):
     parser.addoption('--browser', action='store', help='Specify the browser for test execution')
 
-    # # Add the '--num-workers' option for parallel testing
-    # parser.addoption('--num-workers', action='store', default=1, help='Number of worker processes for parallel testing')
+# Add the '--num-workers' option for parallel testing
+# parser.addoption('--num-workers', action='store', default=1, help='Number of worker processes for parallel testing')
 
 # Override pytest_configure to configure parallel testing with xdist
 # def pytest_configure(config):

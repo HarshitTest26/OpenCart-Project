@@ -1,7 +1,8 @@
 import logging
 import os
 
-class logGen():
+
+class logGen:
     @staticmethod
     def loggen():
         path = os.path.abspath(os.curdir + '\\logs\\automation.log')

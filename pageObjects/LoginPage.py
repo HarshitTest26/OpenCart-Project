@@ -1,5 +1,6 @@
 from selenium.webdriver.common.by import By
 
+
 class LoginPage:
     # lnk_login_Xpath = "//ul[@class='dropdown-menu dropdown-menu-right']/descendant::a[text()='Login']"
     txt_email_Xpath = "//input[@id='input-email']"
@@ -7,7 +8,7 @@ class LoginPage:
     btn_ctn_Xpath = "//input[@value='Login']"
     ele_text_Xpath = "//h2[normalize-space()='My Account']"
 
-    def __init__(self,driver):
+    def __init__(self, driver):
         self.driver = driver
 
     # def login_lnk(self):
@@ -26,6 +27,4 @@ class LoginPage:
         try:
             return self.driver.find_element(By.XPATH, self.ele_text_Xpath).text
         except:
-            None
-
-
+            var = None
