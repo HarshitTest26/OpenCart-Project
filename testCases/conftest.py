@@ -1,4 +1,4 @@
-from _datetime import datetime
+from datetime import datetime
 import os
 
 import pytest
@@ -75,5 +75,11 @@ def pytest_sessionfinish(session, exitstatus):
 
 @pytest.hookimpl(tryfirst=True)
 def pytest_configure(config):
-    config.option.htmlpath = (os.path.abspath(os.curdir+"\\reports\\"+datetime.now().strftime("%d-%m-%Y %H-%M_%S")+
-                                              ".html"))
+    # config.option.htmlpath = (os.path.abspath(os.curdir+"\\reports\\"+datetime.now().strftime("%d-%m-%Y_%H-%M-%S")+
+    #                                           ".html"))
+
+    report_dir = os.path.join(os.curdir, "reports")
+    timestamp = datetime.now().strftime("%d-%m-%Y_%H-%M-%S")
+    report_name = f"{timestamp}.html"
+    report_path = os.path.abspath(os.path.join(report_dir, report_name))
+    config.option.htmlpath = report_path

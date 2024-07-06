@@ -20,7 +20,7 @@ class Test_login_dTT:
     def test_login_DTT(self,setup):
         self.log.info("** STARTING DATA DRIVEN LOGIN TEST **")
         self.rows = XLUtils.rows_Count(self.file, sheetKaNaam='Sheet1')
-        lst_status =[]
+        lst_status = []
 
         self.driver = setup
         self.driver.get(self.baseURL)

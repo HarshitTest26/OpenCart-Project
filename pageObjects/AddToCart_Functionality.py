@@ -53,6 +53,3 @@ class AddToCart:
             return items.is_displayed()
         except NoSuchElementException:
             return False
-
-
-
