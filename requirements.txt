@@ -7,3 +7,5 @@ openpyxl
 allure-pytest
 pytest
 pytest-hot-reloading
+faker
+pandas
