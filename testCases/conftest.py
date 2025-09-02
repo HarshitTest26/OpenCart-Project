@@ -1,10 +1,10 @@
 from datetime import datetime
 import os
-
 import pytest
 from pytest_metadata.plugin import metadata_key
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.edge.service import Service as EdgeService
 from selenium.webdriver.firefox.service import Service as FireFoxService
 from webdriver_manager.chrome import ChromeDriverManager
@@ -15,71 +15,67 @@ from _pytest.config import ExitCode
 
 @pytest.fixture()
 def setup(browser):
+    """
+    Sets up the WebDriver for the specified browser, with headless mode for Chrome.
+    """
     if browser == "edge":
-        # Instantiate EdgeService with EdgeChromiumDriverManager
         service = EdgeService(executable_path=EdgeChromiumDriverManager().install())
         driver = webdriver.Edge(service=service)
         print("Edge driver invoked successfully......")
-
     elif browser == "firefox":
-        # Instantiate FirefoxService with GeckoDriverManager
         service = FireFoxService(executable_path=GeckoDriverManager().install())
         driver = webdriver.Firefox(service=service)
         print("Firefox driver invoked successfully......")
-
     else:
-        # Instantiate ChromeService with ChromeDriverManager
+        # Configure Chrome to run in headless mode for server environments like Jenkins
+        chrome_options = ChromeOptions()
+        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--disable-gpu")
+        chrome_options.add_argument("--no-sandbox")  # Bypass OS security model
+        chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems
+
         service = ChromeService(executable_path=ChromeDriverManager().install())
-        driver = webdriver.Chrome(service=service)
-        print("By default chrome driver invoked successfully......")
-    return driver
+        driver = webdriver.Chrome(service=service, options=chrome_options)
+        print("By default chrome driver invoked successfully in headless mode......")
+
+    yield driver
+    driver.quit()
 
 
 def pytest_addoption(parser):
-    parser.addoption('--browser', action='store', help='Specify the browser for test execution')
-
-# Add the '--num-workers' option for parallel testing
-# parser.addoption('--num-workers', action='store', default=1, help='Number of worker processes for parallel testing')
-
-# Override pytest_configure to configure parallel testing with xdist
-# def pytest_configure(config):
-#     # Check if xdist is enabled
-#     if hasattr(config, 'workerinput'):
-#         # Set the number of workers based on the '--num-workers' option
-#         num_workers = config.getoption('--num-workers')
-#         config.workerinput['numprocesses'] = num_workers
-
-# This function will be executed after all tests have finished running
-# def pytest_sessionfinish(session, exitstatus):
-#     # Check if xdist was used
-#     if hasattr(session.config, 'workerinput'):
-#         # If any worker process failed, set the exit code to 1
-#         if exitstatus == ExitCode.TESTS_FAILED or exitstatus == ExitCode.INTERRUPTED:
-#             session.exitstatus = 1
+    """
+    Adds a command-line option to specify the browser.
+    """
+    parser.addoption('--browser', action='store', default='chrome', help='Specify the browser for test execution')
 
 
 @pytest.fixture()
 def browser(request):
+    """
+    Fixture to get the browser option from the command line.
+    """
     return request.config.getoption('--browser')
 
 
-#report generation
-
 @pytest.hookimpl(tryfirst=True)
 def pytest_sessionfinish(session, exitstatus):
+    """
+    Adds custom metadata and handles exit status.
+    """
     session.config.stash[metadata_key]["Tester"] = "Harshit"
-
     if exitstatus == ExitCode.TESTS_FAILED or exitstatus == ExitCode.INTERRUPTED:
         session.exitstatus = 1
 
 
 @pytest.hookimpl(tryfirst=True)
 def pytest_configure(config):
-    # config.option.htmlpath = (os.path.abspath(os.curdir+"\\reports\\"+datetime.now().strftime("%d-%m-%Y_%H-%M-%S")+
-    #                                           ".html"))
-
+    """
+    Dynamically sets the path for the HTML report.
+    """
     report_dir = os.path.join(os.curdir, "reports")
+    os.makedirs(report_dir, exist_ok=True)
     timestamp = datetime.now().strftime("%d-%m-%Y_%H-%M-%S")
     report_name = f"{timestamp}.html"
     report_path = os.path.abspath(os.path.join(report_dir, report_name))
     config.option.htmlpath = report_path
+
