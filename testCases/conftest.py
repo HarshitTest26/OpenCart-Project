@@ -29,7 +29,6 @@ def setup(browser):
     else:
         # Configure Chrome to run in headless mode for server environments like Jenkins
         chrome_options = ChromeOptions()
-        chrome_options.add_argument("--headless")
         chrome_options.add_argument("--disable-gpu")
         chrome_options.add_argument("--no-sandbox")  # Bypass OS security model
         chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems
