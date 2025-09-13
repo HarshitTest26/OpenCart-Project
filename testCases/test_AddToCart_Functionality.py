@@ -30,7 +30,9 @@ class Test_AddToCart:
         self.lgn.login_btn()
 
         self.ac = AddToCart(self.driver)
+        self.driver.get(self.baseURL)
         self.ac.search_input("iMac")
+        self.driver.implicitly_wait(10)
         self.ac.search_btn()
         if self.ac.search_result_verify():
             self.logger.info("** ITEM IS DISPLAYED SUCCESSFULLY **")
