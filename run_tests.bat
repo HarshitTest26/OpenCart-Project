@@ -1,3 +1,3 @@
 @echo off
-pytest -v -s "test_AccountRegistration_01
+pytest -v -s testCases\test_AccountRegistration_01.py
 pause
