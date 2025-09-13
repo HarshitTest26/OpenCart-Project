@@ -62,22 +62,24 @@ class Test_AddToCart:
                 self.ac.product_img_click()
                 self.ac.click_add_to_cart()
 
-                # Check for success message and wait for it to disappear
+                # Use a flexible wait for the success message to appear and then disappear.
+                # The message might contain dynamic text, so a simple class-based locator is more reliable.
                 try:
-                    success_message_xpath = "//div[@class='alert alert-success alert-dismissible']"
+                    success_message_locator = (By.XPATH, "//div[contains(@class, 'alert-success')]")
                     WebDriverWait(self.driver, 10).until(
-                        EC.presence_of_element_located((By.XPATH, success_message_xpath))
+                        EC.visibility_of_element_located(success_message_locator)
                     )
                     self.logger.info("** ADD TO CART SUCCESS MESSAGE DISPLAYED **")
 
-                    # Wait for the success message to become invisible before proceeding
+                    # Wait for the message to disappear before proceeding to click the shopping cart.
+                    # This prevents the ElementNotInteractableException.
                     WebDriverWait(self.driver, 10).until(
-                        EC.invisibility_of_element_located((By.XPATH, success_message_xpath))
+                        EC.invisibility_of_element_located(success_message_locator)
                     )
                     self.logger.info("** ADD TO CART SUCCESS MESSAGE DISAPPEARED **")
 
                 except Exception as e:
-                    self.logger.error(f"Error waiting for success message: {e}")
+                    self.logger.error(f"Error while waiting for success message: {e}")
                     self.driver.save_screenshot(os.path.abspath(os.curdir + "\\screenshots\\Add_To_Cart_Error.png"))
                     assert False, "Failed to find or wait for success message."
 
